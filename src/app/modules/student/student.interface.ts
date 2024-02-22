@@ -39,7 +39,8 @@ permanentAddress : string;
 guardian:TGuardian;
 localGuardian : TLocalGuardian;
 profileImg? : string;
-isActive : "active" | "blocked"
+isActive : "active" | "blocked";
+isDeleted : boolean;
 
 }
 

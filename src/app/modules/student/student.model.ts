@@ -146,6 +146,10 @@ maxLength: [20,'Password can not be more than 20 characters']
     enum: ["active", "blocked"],
     default: "active",
   },
+  isDeleted:{
+    type: Boolean,
+    default: false,
+  }
 });
 
 studentSchema.statics.isUserExists = async function (id: string) {
@@ -155,8 +159,27 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
 //pre save middleware
 studentSchema.pre('save',async function(next){
-  const user = this
+  const user = this //current document
 user.password =await bcrypt.hash(user.password,Number(config.BCRYPT_SALT_ROUNDS))
+next()
+})
+studentSchema.post('save',async function(doc,next){
+  doc.password=''
+next()
+})
+
+//query middleware
+studentSchema.pre('find', function(next){
+this.find({isDeleted : {$ne : true}})
+next()
+})
+studentSchema.pre('findOne', function(next){
+this.find({isDeleted : {$ne : true}})
+next()
+})
+studentSchema.pre('aggregate', function(next){
+  //dont show deleted daa on aggregate pipeline
+this.pipeline().unshift({$match : {isDeleted : {$ne : true}}})
 next()
 })
 

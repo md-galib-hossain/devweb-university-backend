@@ -36,6 +36,7 @@ const GuardianSchema = z.object({
     localGuardian: LocalGuardianSchema,
     profileImg: z.string().optional(),
     isActive: z.enum(["active", "blocked"]).default("active"),
+    isDeleted: z.boolean()
   });
   
   export const studentValidations = {CreateStudentValidationSchema}
