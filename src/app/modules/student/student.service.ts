@@ -1,15 +1,16 @@
 import { TStudent } from "./student.interface";
 import { Student } from "./student.model";
 
-const createStudentIntoDb = async(studentData : TStudent)=>{
-
-if(await Student.isUserExists(studentData.id)){
-    throw new Error(`Student ${studentData.id} already exists`)
-}
-const result = await Student.create(studentData)
-//return result to controller
-return result
-
+const updateStudentIntoDb = async(payload : Partial<TStudent>)=>{
+    if(!await Student.isUserExists(payload.id!)){
+        throw new Error(`Student ${payload.id} doesn't exists`)
+    }
+    const result = await Student.findOneAndUpdate({
+        id: payload.id
+    },{
+        payload
+    })
+    return result
 }
 
 const getAllStudentsFromDb = async()=>{
@@ -28,6 +29,8 @@ const deleteStudentFromDb = async(id : string)=>{
     const result = await Student.updateOne({id},{isDeleted: true})
     return result
 }
+
+
 export const StudentServices = {
-    createStudentIntoDb,getAllStudentsFromDb,getSingleStudent,deleteStudentFromDb
+    updateStudentIntoDb,getAllStudentsFromDb,getSingleStudent,deleteStudentFromDb
 }
