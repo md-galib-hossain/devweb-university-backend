@@ -29,7 +29,6 @@ name : TUserName;
 user : Types.ObjectId;
 email : string;
 id : string;
-password: string
 gender : "male" | "female";
 dateOfBirth? : string;
 contactNo : string;

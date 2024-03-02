@@ -6,7 +6,6 @@ import {
   TStudentModel,
   TUserName,
 } from "./student.interface";
-import bcrypt from "bcrypt";
 import config from "../../config";
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -81,11 +80,7 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
       required: [true, "student id is required"],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, "student password is required"],
-      maxLength: [20, "Password can not be more than 20 characters"],
-    },
+
     name: {
       type: userNameSchema,
       required: [true, "name is required"],
@@ -103,6 +98,8 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
         message:
           "{VALUE} is not valid.The gender field can only be 'male' or 'female",
       },
+      required: [true, "Gender is required"],
+
     },
     dateOfBirth: {
       type: String,
@@ -168,19 +165,7 @@ studentSchema.statics.isUserExists = async function (id: string) {
   return existingUser;
 };
 
-//pre save middleware
-studentSchema.pre("save", async function (next) {
-  const user = this; //current document
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.BCRYPT_SALT_ROUNDS)
-  );
-  next();
-});
-studentSchema.post("save", async function (doc, next) {
-  doc.password = "";
-  next();
-});
+
 
 //query middleware
 studentSchema.pre("find", function (next) {

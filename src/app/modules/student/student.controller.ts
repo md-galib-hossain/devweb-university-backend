@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 import { z } from "zod";
 import { studentValidations } from "./student.validation";
 
 
-const getAllStudents = async (req : Request, res : Response) => {
+const getAllStudents = async (req : Request, res : Response,next : NextFunction) => {
 
 try{
 const result = await StudentServices.getAllStudentsFromDb()
@@ -14,15 +14,12 @@ res.status(200).json({
   data : result
 })
 }catch(e:any){
-  res.status(500).json({
-    success : false,
-    message : e.message || "Something went wrong",
-    error : e
-  })  
+  next(e)
+ 
 }
 
 }
-const getSingleStudent = async (req : Request, res : Response) => {
+const getSingleStudent = async (req : Request, res : Response, next : NextFunction) => {
   try{
 
     const {studentId} = req.params
@@ -34,15 +31,11 @@ const getSingleStudent = async (req : Request, res : Response) => {
       data : result
     })
   }catch(e:any){
-    res.status(500).json({
-      success : false,
-      message : e.message || "Something went wrong",
-      error : e
-    }) 
+   next(e)
   }
 
 }
-const deleteStudent = async (req : Request, res : Response) => {
+const deleteStudent = async (req : Request, res : Response,next : NextFunction) => {
   try{
 
     const {studentId} = req.params
@@ -54,15 +47,12 @@ const deleteStudent = async (req : Request, res : Response) => {
       data : result
     })
   }catch(e:any){
-    res.status(500).json({
-      success : false,
-      message : e.message || "Something went wrong",
-      error : e
-    }) 
+    next(e)
+
   }
 
 }
-const updateStudent = async(req : Request,res : Response)=>{
+const updateStudent = async(req : Request,res : Response,next : NextFunction)=>{
   try{
 
     const student = req.body
@@ -73,11 +63,8 @@ const updateStudent = async(req : Request,res : Response)=>{
       data : result
     })
   }catch(e){
-    res.status(500).json({
-      success : false,
-      message : "Something went wrong while updating student",
-      error : e 
-    })
+    next(e)
+
 
   }
 
