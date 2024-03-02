@@ -2,15 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 import { z } from "zod";
 import { studentValidations } from "./student.validation";
+import sendResponse from "../../utils/sendResponse";
+import httpStatus from "http-status";
 
 
 const getAllStudents = async (req : Request, res : Response,next : NextFunction) => {
 
 try{
 const result = await StudentServices.getAllStudentsFromDb()
-res.status(200).json({
+
+sendResponse(res,{
   success : true,
-  message : 'Students retrieved successfully',
+  statusCode : httpStatus.OK,
+  message : 'Student retrieved successfully',
   data : result
 })
 }catch(e:any){
@@ -25,9 +29,10 @@ const getSingleStudent = async (req : Request, res : Response, next : NextFuncti
     const {studentId} = req.params
 
     const result = await StudentServices.getSingleStudent(studentId)
-    res.status(200).json({
+    sendResponse(res,{
       success : true,
-      message : "single student retrieved",
+      statusCode : httpStatus.OK,
+      message : 'Single student retrieved',
       data : result
     })
   }catch(e:any){
@@ -41,9 +46,11 @@ const deleteStudent = async (req : Request, res : Response,next : NextFunction) 
     const {studentId} = req.params
 
     const result = await StudentServices.deleteStudentFromDb(studentId)
-    res.status(200).json({
+ 
+    sendResponse(res,{
       success : true,
-      message : " Student Deleted",
+      statusCode : httpStatus.OK,
+      message : 'Student Deleted',
       data : result
     })
   }catch(e:any){
@@ -57,9 +64,11 @@ const updateStudent = async(req : Request,res : Response,next : NextFunction)=>{
 
     const student = req.body
     const result = await StudentServices.updateStudentIntoDb(student)
-    res.status(200).json({
+ 
+    sendResponse(res,{
       success : true,
-      message : "Student updated successfully",
+      statusCode : httpStatus.OK,
+      message : 'Student updated successfully',
       data : result
     })
   }catch(e){
