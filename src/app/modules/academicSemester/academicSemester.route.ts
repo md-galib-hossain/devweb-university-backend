@@ -8,6 +8,9 @@ const router = express.Router()
 //* client -> route -> controller -> service -> model
 
 router.post('/create-academic-semester',validateRequest(AcademicSemeterValidation.createAcademicSemesterValidationSchema),AcademicSemesterControllers.createAcademicSemester)
+router.get('/', AcademicSemesterControllers.getAcademicSemesters);
+router.get('/:semesterId',AcademicSemesterControllers.getSingleAcademicSemester)
+router.patch('/:semesterId',validateRequest(AcademicSemeterValidation.updateAcademicSemesterValidationSchema),AcademicSemesterControllers.updateAcademicSemester)
 
 // router.get('/', StudentControllers.getAllStudents)
 // router.get('/:studentId', StudentControllers.getSingleStudent)
