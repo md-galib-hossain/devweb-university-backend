@@ -30,7 +30,7 @@ user : Types.ObjectId;
 email : string;
 id : string;
 gender : "male" | "female";
-dateOfBirth? : string;
+dateOfBirth? : Date;
 contactNo : string;
 emergencyContactNo: string;
 bloodGroup? : "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-" ;
