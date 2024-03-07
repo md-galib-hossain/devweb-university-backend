@@ -51,6 +51,6 @@ next()
 })
 
 export const AcademicSemester = model<TAcademicSemester>(
-  "AcamedicSemester",
+  "AcademicSemester",
   academicSemesterSchema
 );
