@@ -6,6 +6,8 @@ import {
   
 } from "./academicSemester.interface";
 import { AcademicSemesterCode, AcademicSemesterName, Months } from "./academicSemester.Constant";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 
 
@@ -45,7 +47,7 @@ const isSemesterExists = await AcademicSemester.findOne({
   name : this.name
 })
 if(isSemesterExists){
-  throw new Error('Semester is already exists !')
+  throw new AppError(httpStatus.CONFLICT,'Semester is already exists !')
 }
 next()
 })
