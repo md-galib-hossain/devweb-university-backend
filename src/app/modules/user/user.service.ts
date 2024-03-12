@@ -14,10 +14,6 @@ const createStudentIntoDb = async (password: string, studentData: TStudent) => {
   //create a user object
   let userData: Partial<TUser> = {};
 
-  // if(await User.isUserExists(studentData.id)){
-  //     throw new Error(`Student ${studentData.id} already exists`)
-  // }
-
   //if password is not given then use default password
   userData.password = password || (config.DEFAULT_PASS as string);
 
@@ -38,7 +34,6 @@ const createStudentIntoDb = async (password: string, studentData: TStudent) => {
     //create new user (transaction - 1)
     const newUser = await User.create([userData], { session });
     //recived new user in an array
-    //create a student
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to create User");
     }
@@ -56,8 +51,10 @@ const createStudentIntoDb = async (password: string, studentData: TStudent) => {
     await session.endSession();
     return newStudent;
   } catch (e) {
+    //abort the transaction on error
     await session.abortTransaction();
     await session.endSession();
+    throw new Error('Failed to create student')
   }
 };
 
