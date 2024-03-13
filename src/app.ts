@@ -15,6 +15,10 @@ app.use(cors())
 
 app.use('/api/v1',router)
 
+const test = async (req : Request,res : Response)=>{
+// Promise.reject()
+}
+app.get('/test',test)
 
 app.get('/', (req : Request, res : Response) => {
   res.status(200).json({
@@ -24,6 +28,7 @@ app.get('/', (req : Request, res : Response) => {
 })
 //not found route
 app.use(notFound)
+
 //error handler
 app.use(globalErrorHandler)
 export default app
