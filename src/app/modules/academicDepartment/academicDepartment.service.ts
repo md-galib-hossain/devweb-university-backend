@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
 import { TAcademicDepartment } from "./academicDepartment.interface";
 import { AcademicDepartment } from "./academicDepartment.model";
 
@@ -14,6 +16,9 @@ const getAcademicDepartmentsFromDB = async () => {
 };
 const getSingleAcademicDepartmentFromDB = async (id: string) => {
   const result = await AcademicDepartment.findById(id).populate("academicFaculty");
+  if(!result){
+    throw new AppError(httpStatus.NOT_FOUND,"Department not found")
+  }
   return result;
 };
 

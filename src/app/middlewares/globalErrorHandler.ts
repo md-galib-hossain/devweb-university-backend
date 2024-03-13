@@ -4,6 +4,8 @@ import { TErrorSources } from "../interface/error";
 import config from "../config";
 import handleZodError from "../errors/handleZodError";
 import handleValidationError from "../errors/handleValidation";
+import handleCastError from "../errors/handleCastError";
+import handleDuplicateError from "../errors/handleDuplicateError";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //default values
@@ -26,6 +28,16 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = simplifiedError?.errorSources;
   }else if(err?.name === 'ValidationError'){ //mongoose error
     const simplifiedError = handleValidationError(err)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
+  }else if(err?.name === 'CastError'){ //invalid id error
+    const simplifiedError = handleCastError(err)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
+  }else if(err?.code === 11000){ //duplicate id error
+    const simplifiedError = handleDuplicateError(err)
     statusCode = simplifiedError?.statusCode
     message = simplifiedError?.message
     errorSources = simplifiedError?.errorSources
