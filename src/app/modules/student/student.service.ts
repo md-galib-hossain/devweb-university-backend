@@ -9,30 +9,29 @@ const updateStudentIntoDb = async (payload: Partial<TStudent>, id: string) => {
   if (!(await Student.isUserExists(id!))) {
     throw new AppError(httpStatus.NOT_FOUND, `Student ${id} doesn't exists`);
   }
-const {name,guardian,localGuardian,...remainingStudentData} = payload
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload;
 
-const modifiedUpdatedData : Record<string,unknown> = {...remainingStudentData} 
-//for name field
-if(name && Object.keys(name).length){
-  for (const [key,value] of Object.entries(name)){
-    modifiedUpdatedData[`name.${key}`]=value
-  } 
- 
-}
-//for guardian field
-if(guardian && Object.keys(guardian).length){
-  for (const [key,value] of Object.entries(guardian)){
-    modifiedUpdatedData[`guardian.${key}`]=value
-  } 
-  
-}
-//for name field
-if(localGuardian && Object.keys(localGuardian).length){
-  for (const [key,value] of Object.entries(localGuardian)){
-    modifiedUpdatedData[`localGuardian.${key}`]=value
-  } 
- 
-}
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+  //for name field
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+  //for guardian field
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedData[`guardian.${key}`] = value;
+    }
+  }
+  //for name field
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedData[`localGuardian.${key}`] = value;
+    }
+  }
 
   const result = await Student.findOneAndUpdate(
     {
@@ -42,15 +41,23 @@ if(localGuardian && Object.keys(localGuardian).length){
     modifiedUpdatedData,
     {
       new: true,
-      runValidators:true
+      runValidators: true,
     }
   );
 
   return result;
 };
 
-const getAllStudentsFromDb = async () => {
-  const result = await Student.find()
+const getAllStudentsFromDb = async (query: Record<string, unknown>) => {
+  let searchTerm = "";
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+  const result = await Student.find({
+    $or: ["email", "name.lastName", "presentAddress"].map((field) => ({
+      [field]: { $regex: searchTerm, $options: "i" },
+    })),
+  })
     .populate("admissionSemester")
     .populate({
       path: "academicDepartment",
@@ -108,10 +115,10 @@ const deleteStudentFromDb = async (id: string) => {
     await session.endSession();
 
     return deletedStudent;
-  } catch (e) {
+  } catch (e: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error('Failed to delete student')
+    throw new Error(e);
   }
 };
 
