@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { BloodGroup, Gender } from './faculty.constant';
 
-const createUserNameValidationSchema = z.object({
+export const createUserNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(1)
