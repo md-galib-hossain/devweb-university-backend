@@ -8,9 +8,9 @@ const router = express.Router()
 //* client -> route -> controller -> service -> model
 
 router.get('/', StudentControllers.getAllStudents)
-router.get('/:studentId', StudentControllers.getSingleStudent)
-router.delete('/:studentId', StudentControllers.deleteStudent)
-router.patch('/:studentId',validateRequest(studentValidations.UpdateStudentValidationSchema), StudentControllers.updateStudent)
+router.get('/:id', StudentControllers.getSingleStudent)
+router.delete('/:id', StudentControllers.deleteStudent)
+router.patch('/:id',validateRequest(studentValidations.UpdateStudentValidationSchema), StudentControllers.updateStudent)
 
 
 export const StudentRoutes = router
