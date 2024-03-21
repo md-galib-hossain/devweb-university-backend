@@ -4,13 +4,16 @@ import { TCourse, TPreRequisiteCourses } from "./course.interface";
 const preRequisiteCoursesSchema = new Schema<TPreRequisiteCourses>({
   course: {
     type: Schema.Types.ObjectId,
+    ref: "Course",
     required: true,
   },
   isDeleted: {
     type: Boolean,
     default: false,
   },
-});
+}, {
+  _id: false
+  });
 const courseSchema = new Schema<TCourse>({
   title: {
     type: String,
@@ -33,6 +36,10 @@ const courseSchema = new Schema<TCourse>({
     type: Number,
     required: true,
     trim: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
   preRequisiteCourses: [preRequisiteCoursesSchema],
 });
